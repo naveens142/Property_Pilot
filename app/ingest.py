@@ -2,7 +2,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance
-from pypdf import PdfReader
+import pdfplumber
 from dotenv import load_dotenv
 import uuid
 import os
@@ -14,15 +14,15 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 pdf_path = os.path.join(script_dir, "..", "data", "property_docs.pdf")
 
 # Load PDF
-reader = PdfReader(pdf_path)
 text = ""
-for page in reader.pages:
-    text += page.extract_text()
+with pdfplumber.open(pdf_path) as pdf:
+    for page in pdf.pages:
+        text += page.extract_text()
 
 # Split text
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=800,
-    chunk_overlap=100
+    chunk_size=1500,
+    chunk_overlap=200
 )
 chunks = splitter.split_text(text)
 

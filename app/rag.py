@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 client = QdrantClient(url="http://localhost:6333")
 collection_name = "property_docs"
 embeddings = OpenAIEmbeddings()
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, max_tokens=500)
 
 
 def ask_question(question: str) -> str:
@@ -44,8 +44,8 @@ def ask_question(question: str) -> str:
         search_results = client.query_points(
             collection_name=collection_name,
             query=query_vector,
-            limit=5,
-            score_threshold=0.5
+            limit=8,
+            score_threshold=0.45
         ).points
         
         if not search_results:
@@ -54,7 +54,7 @@ def ask_question(question: str) -> str:
         
         # Build context from search results
         context = "\n\n".join(
-            [f"[Score: {point.score:.2f}] {point.payload['text']}" 
+            [point.payload['text'] 
              for point in search_results]
         )
         
