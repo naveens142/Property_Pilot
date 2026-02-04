@@ -1,0 +1,10 @@
+openai
+qdrant-client
+langchain
+langchain-community
+langchain-openai
+pypdf
+python-dotenv
+streamlit
+tiktoken
+langchain-text-splitters
